@@ -26,10 +26,6 @@ module fulladd(
     halfadd h2(ha1, cin, s, a1);
     or g1 (cout, a1, ha2);
 
-    // halfadd h1(a,b,s,cin);
-    // halfadd h2(s,cin,s,cout);
-    // or g1 (cout, cout, cin);
-
 endmodule
 
 
