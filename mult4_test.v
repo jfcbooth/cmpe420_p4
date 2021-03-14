@@ -1,10 +1,10 @@
-module mult4_test();
+module multiplier4_test();
 
 reg [3:0] A;
 reg [3:0] B;
 wire [7:0] C;
 
-mult4 uut(A, B, C);
+multiplier4 uut(A, B, C);
 
 initial begin
     

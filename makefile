@@ -11,9 +11,13 @@ adder: adder.v adder_test.v
 	./adder
 
 mult4: mult4.v mult4_test.v
-	iverilog -g2001 mult4.v mult4_test.v -o mult4 -s mult4_test
+	iverilog -g2001 mult4.v mult4_test.v -o mult4 -s multiplier4_test
 	./mult4
 
-# fulladd: adder.v adder_test.v
-# 	iverilog -g2001 $@.v $@_test.v -o $@ -s $@_test
-# 	./$@
+multiplier: mult.v mult_test.v
+	iverilog -g2001 mult.v mult_test.v -o mult -s multiplier_test
+	./mult
+
+bcdadd: bcdadd.v bcdadd_test.v
+	iverilog -g2001 bcdadd.v bcdadd_test.v -o bcdadd -s bcdadd_test
+	./bcdadd
