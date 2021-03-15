@@ -5,45 +5,39 @@ module bcdadd #(parameter DIGITS = 4) (
 );
 
 genvar i;
-genvar j;
+//genvar j;
 generate
-    for(i = 1; i < DIGITS+1; i = i+1) begin:blk
+    for(i = 0; i < DIGITS+1; i = i+1) begin:blk
         wire [(DIGITS*4)-1:0] out;
-        if(i == 1) begin
-            assign out = A[3:0];
+        wire [(DIGITS*4)-1:0] carry;
+        if(i == 0) begin
+            assign out = 8'd0;
+            assign carry = 8'd0;
         end
         else begin
-            for(j = 0; j < i; j = j + 1) begin: mult
-                wire [(DIGITS*4)-1:0] multi;
-                if(j == 0)
-                    assign multi = 8'd1;
-                else
-                    assign multi = (mult[j-1].multi * 8'd10);
-            end
-            assign out = blk[i-1].out + ((A[(i*4)-1:(i*4)-4]) * mult[i-1].multi); // one bcd digit
+            assign out = (A[(i*4)-1:(i*4)-4] + B[(i*4)-1:(i*4)-4]+ blk[i-1].carry > 4'd9) ?
+            ((A[(i*4)-1:(i*4)-4] + B[(i*4)-1:(i*4)-4] + blk[i-1].carry - 4'd10) << 4*(i-1)) + blk[i-1].out :
+            ((A[(i*4)-1:(i*4)-4] + B[(i*4)-1:(i*4)-4] + blk[i-1].carry) << 4*(i-1)) + blk[i-1].out;
+            assign carry = (A[(i*4)-1:(i*4)-4] + B[(i*4)-1:(i*4)-4] + blk[i-1].carry > 4'd9) ? 4'd1 : 4'd0;
         end
     end
+
+
+            // for(j = 0; j < i; j = j + 1) begin: mult
+            //     wire [(DIGITS*4)-1:0] multi;
+            //     if(j == 0)
+            //         assign multi = 8'd1;
+            //     else
+            //         assign multi = (mult[j-1].multi * 8'd10);
+            // end
+    //         assign out = blk[i-1].out + ((A[(i*4)-1:(i*4)-4]) * mult[i-1].multi); // one bcd digit
+    //     end
+    // end
 
     //assign sum = blk[DIGITS].out;
 
-    for(i = 0; i < DIGITS; i = i+1) begin:blk2
-        wire [(DIGITS*4)-1:0] out2;
-        if(i == 0) begin
-            assign out2 = blk[DIGITS].out;
-        end
-        else begin
-            for(j = 0; j < i; j = j + 1) begin: mult2
-                wire [(DIGITS*4)-1:0] multi;
-                if(j == 0)
-                    assign multi = 8'd1;
-                else
-                    assign multi = (mult2[j-1].multi * 8'd10);
-            end
-            assign out2 = blk2[i-1].out2 + ((B[(i*4)-1:(i*4)-4]) * mult2[i-1].multi); // one bcd digit
-        end
-    end
  endgenerate
 
-    assign sum = blk2[DIGITS-1].out2;
-
+    //assign sum = blk2[DIGITS-1].out2;
+    assign sum = blk[DIGITS].out;
 endmodule
